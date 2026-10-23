@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>오빠, 생일 축하해 🖤</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#090909;color:#f5f5f5;
+ font-family:Arial,"Malgun Gothic",sans-serif;
+ text-align:center;min-height:100vh;overflow-x:hidden;
+ display:flex;justify-content:center;align-items:center;padding:25px 18px
+}
+#stars{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.star{position:absolute;color:white;animation:twinkle 3s infinite alternate}
+@keyframes twinkle{to{opacity:.2;transform:scale(.7)}}
+main{width:100%;max-width:430px;position:relative;z-index:1}
+.page{display:none;animation:fade .6s ease}
+.page.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.tag{font-size:10px;letter-spacing:4px;color:#999;margin-bottom:25px}
+h1{font-size:38px;font-weight:400;line-height:1.5}
+h2{font-size:25px;font-weight:400;line-height:1.6}
+p{font-size:14px;color:#bbb;line-height:2;word-break:keep-all}
+button{cursor:pointer;font-size:13px;padding:13px 20px;border-radius:30px;
+ border:1px solid #777;background:transparent;color:white;margin:7px}
+button:hover{background:white;color:black}
+.primary{background:white;color:black}
+.music{position:fixed;right:12px;top:12px;z-index:5;font-size:11px;padding:9px 13px}
+.envelope{width:190px;height:125px;background:#eee;margin:45px auto 35px;
+ position:relative;cursor:pointer;border-radius:3px}
+.envelope:before{content:"";position:absolute;inset:0;
+ background:linear-gradient(35deg,transparent 49%,#ccc 50%) left/50% 100% no-repeat,
+ linear-gradient(-35deg,transparent 49%,#ddd 50%) right/50% 100% no-repeat}
+.flap{position:absolute;top:0;left:0;width:0;height:0;
+ border-left:95px solid transparent;border-right:95px solid transparent;
+ border-top:72px solid white;transform-origin:top;transition:.7s;z-index:3}
+.letter{position:absolute;top:12px;left:15px;width:160px;height:95px;
+ background:white;color:#111;display:grid;place-items:center;font-size:10px;
+ letter-spacing:2px;transition:.8s}
+.seal{position:absolute;z-index:4;top:48px;left:81px;border:1px solid #111;
+ color:#111;border-radius:50%;padding:7px;background:white}
+.envelope.open .flap{transform:rotateX(180deg)}
+.envelope.open .letter{transform:translateY(-60px)}
+.envelope.open .seal{opacity:0}
+.cake{font-size:85px;margin:30px 0 10px;cursor:pointer}
+.candle{font-size:30px;cursor:pointer}
+.rule{width:45px;height:1px;background:#777;margin:25px auto}
+.count{font-size:11px;color:#888;letter-spacing:3px}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:9}
+.fall{position:absolute;top:-20px;color:white;animation:fall 3s linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(500deg);opacity:0}}
+footer{margin-top:55px;color:#555;font-size:9px;letter-spacing:3px}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+<div id="confetti"></div>
+<button class="music" id="music">♪ 음악 켜기</button>
+
+<main>
+<section class="page active" id="p0">
+ <div class="tag">A LITTLE SURPRISE FOR YOU</div>
+ <h1>오빠,<br>생일 축하해.</h1>
+ <div class="envelope" id="env" role="button" tabindex="0">
+  <div class="letter">FOR YOUR BIRTHDAY</div>
+  <div class="flap"></div><div class="seal">✦</div>
+ </div>
+ <p>작은 선물을 준비했어.<br>천천히 눌러봐 :)</p>
+ <button class="primary" onclick="openLetter()">오빠, 눌러봐 ↗</button>
+</section>
+
+<section class="page" id="p1">
+ <div class="tag">HAPPY BIRTHDAY</div>
+ <h2>오늘은 오빠의 날이니까.</h2>
+ <div class="cake">🎂</div>
+ <div class="candle" id="candle" onclick="blow()">🕯️</div>
+ <p id="wish">초를 눌러서 소원을 빌어봐.<br>좋은 일이 많이 생기길 바라.</p>
+ <button onclick="blow()">초 끄기 ✧</button>
+ <button class="primary" onclick="go(2)">다음 →</button>
+</section>
+
+<section class="page" id="p2">
+ <div class="tag">A FEW WORDS FOR YOU</div>
+ <div class="count" id="count">01 / 04</div>
+ <h2 id="mtitle">오빠, 생일 축하해.</h2>
+ <div class="rule"></div>
+ <p id="msg">오늘 하루 편안하고 행복하게 보냈으면 좋겠어.</p>
+ <button id="prev" onclick="change(-1)">← 이전</button>
+ <button class="primary" id="next" onclick="change(1)">다음 →</button>
+</section>
+
+<section class="page" id="p3">
+ <div class="tag">ONE LAST WISH</div>
+ <div style="font-size:40px;margin:25px">✦</div>
+ <h1>생일 축하해,<br>오빠.</h1>
+ <div class="rule"></div>
+ <p>
+ 항상 건강하고, 잠도 잘 자고,<br>
+ 앞으로는 좋은 일들이 더 많았으면 좋겠어.<br><br>
+ 오늘도, 그리고 앞으로의 날들도<br>
+ 무리하지 말고 잘 지내길 바라.
+ </p>
+ <p style="font-size:12px;color:#888">이 마음만 조용히 전하고 싶었어.</p>
+ <button class="primary" onclick="celebrate()">마지막으로 눌러봐 ✧</button>
+ <button onclick="restart()">처음부터 보기 ↺</button>
+</section>
+<footer>MADE WITH GOOD WISHES · FOR CHAN</footer>
+</main>
+
+<script>
+const starBox=document.getElementById("stars");
+for(let i=0;i<45;i++){
+ let s=document.createElement("span");
+ s.className="star";s.textContent=Math.random()>.5?"✦":"·";
+ s.style.left=Math.random()*100+"%";
+ s.style.top=Math.random()*100+"%";
+ s.style.fontSize=(8+Math.random()*12)+"px";
+ s.style.animationDelay=Math.random()*4+"s";
+ starBox.appendChild(s);
+}
+function go(n){
+ document.querySelectorAll(".page").forEach((p,i)=>p.classList.toggle("active",i===n));
+}
+function openLetter(){
+ document.getElementById("env").classList.add("open");
+ setTimeout(()=>go(1),800);
+}
+document.getElementById("env").onclick=openLetter;
+document.getElementById("env").onkeydown=e=>{
+ if(e.key==="Enter"||e.key===" ")openLetter();
+};
+let blown=false;
+function blow(){
+ if(blown)return;
+ blown=true;
+ document.getElementById("candle").textContent="🕯";
+ document.getElementById("wish").innerHTML=
+ "소원이 꼭 이루어지길!<br>오늘은 많이 웃는 하루가 되길 바라.";
+ confetti(25);
+}
+const messages=[
+ ["오빠, 생일 축하해.","오늘 하루 편안하고 행복하게 보냈으면 좋겠어."],
+ ["항상 건강했으면 좋겠어.","바쁠 때도 밥 잘 챙겨 먹고, 잠도 조금 더 잘 잤으면 좋겠다."],
+ ["좋은 일들이 많아지길 바라.","힘든 날보다 웃을 일이 더 많은 한 해가 됐으면 좋겠어."],
+ ["그냥 좋은 마음으로 전하는 말이야.","답장 부담은 갖지 말고, 오늘은 맛있는 것도 먹으면서 편하게 보내."]
+];
+let idx=0;
+function render(){
+ document.getElementById("count").textContent=
+ String(idx+1).padStart(2,"0")+" / 04";
+ document.getElementById("mtitle").textContent=messages[idx][0];
+ document.getElementById("msg").textContent=messages[idx][1];
+ document.getElementById("prev").style.visibility=idx===0?"hidden":"visible";
+ document.getElementById("next").textContent=idx===3?"마지막 인사 →":"다음 →";
+}
+function change(d){
+ idx+=d;
+ if(idx<0)idx=0;
+ if(idx>=messages.length){go(3);return}
+ render();
+}
+function confetti(n){
+ const box=document.getElementById("confetti");
+ const symbols=["✦","✧","★","·","♡"];
+ for(let i=0;i<n;i++){
+  let el=document.createElement("span");
+  el.className="fall";el.textContent=symbols[Math.floor(Math.random()*symbols.length)];
+  el.style.left=Math.random()*100+"vw";
+  el.style.animationDuration=(2+Math.random()*3)+"s";
+  el.style.fontSize=(12+Math.random()*16)+"px";
+  box.appendChild(el);setTimeout(()=>el.remove(),5000);
+ }
+}
+function celebrate(){confetti(75)}
+function restart(){
+ idx=0;blown=false;render();
+ document.getElementById("env").classList.remove("open");
+ document.getElementById("candle").textContent="🕯️";
+ document.getElementById("wish").innerHTML="초를 눌러서 소원을 빌어봐.<br>좋은 일이 많이 생기길 바라.";
+ go(0);
+}
+render();
+
+// Simple original melody generated by the browser.
+// Tap the music button to start/stop it.
+let ctx=null,timer=null,note=0;
+const tones=[261.63,329.63,392,329.63,293.66,349.23,440,349.23];
+function playNote(){
+ if(!ctx)return;
+ let o=ctx.createOscillator(),g=ctx.createGain();
+ o.type="sine";o.frequency.value=tones[note++%tones.length];
+ g.gain.setValueAtTime(.0001,ctx.currentTime);
+ g.gain.exponentialRampToValueAtTime(.03,ctx.currentTime+.04);
+ g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.5);
+ o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+.55);
+}
+document.getElementById("music").onclick=async function(){
+ if(timer){
+  clearInterval(timer);timer=null;await ctx.suspend();
+  this.textContent="♪ 음악 켜기";
+ }else{
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC){this.textContent="음악을 지원하지 않아요";return}
+  ctx=ctx||new AC();await ctx.resume();playNote();
+  timer=setInterval(playNote,620);this.textContent="♫ 음악 끄기";
+ }
+};
+</script>
+</body>
+</html>
